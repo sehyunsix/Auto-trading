@@ -33,5 +33,7 @@ out/
 /nbdist/
 /.nb-gradle/
 
+## privateInformation""
+**/PrivateConfig.java
 ### VS Code ###
 .vscode/
