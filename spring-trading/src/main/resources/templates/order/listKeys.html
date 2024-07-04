@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<body>
+
+
+<div class ="container">
+    <div>
+        <table border="1" bordercolor="blue"  align = "center">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>이름</th>
+                <th>publickey</th>
+                <th>secretkey</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="members : ${members}">
+                <td th:text="${members.id}"></td>
+                <td th:text="${members.name}"></td>
+                <td th:text="${members.publickey}"></td>
+                <td th:text="${members.secretkey}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

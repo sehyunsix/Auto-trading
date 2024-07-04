@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+
+<div class ="container">
+    <form action="/order/registerKey", method="post">
+
+        <div class="form-group">
+            <table>
+                <tr>
+                    <td><label for="publickey">publickey</label></td>
+                    <td> <input type="text" id="publickey" name="name" placeholder="public 키를 입력하세요"></td>
+                </tr>
+                <tr>
+                    <td><label for="secretkey">secretkey</label></td>
+                    <td><input type="text" id="secretkey" name="name" placeholder="secret 키를 입력하세요"></td>
+                </tr>
+            </table>
+        </div>
+        <button type="submit">등록</button>
+    </form>
+</div>
+
+</body>
+</html>
