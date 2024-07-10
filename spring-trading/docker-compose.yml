@@ -1,0 +1,41 @@
+version: '3.3'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-trading
+    env_file:
+      - ./.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - mongo-trading:/data/db
+      - ./data:/data
+    ports:
+      - '27017:27017'
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
+      ME_CONFIG_MONGODB_URL: mongodb://admin:password123@mongo-trading:27017/test?authSource=admin
+      ME_CONFIG_MONGODB_AUTH_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_AUTH_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+
+  trading:
+    image: sehyunsix/autotrading:0.1.0
+    container_name: trading
+    env_file:
+      - ./.env
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://admin:password123@mongo-trading:27017/test?authSource=admin
+
+volumes:
+  mongo-trading:

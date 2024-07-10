@@ -49,7 +49,6 @@ class MemberServiceTest {
         //when
         memberService.join(member1);
         assertThrows(IllegalStateException.class ,() -> memberService.join(member2));
-
 //        try {
 //            memberService.join(member1);
 //            fail("예외 발생 실패");

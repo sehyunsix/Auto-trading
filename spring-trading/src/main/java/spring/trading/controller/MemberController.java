@@ -1,6 +1,8 @@
 package spring.trading.controller;
 
 
+import io.swagger.v3.oas.models.annotations.OpenAPI31;
+import org.springframework.web.bind.annotation.RestController;
 import spring.trading.domain.Member;
 import spring.trading.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +13,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.util.List;
 
+@OpenAPI31
 @Controller
+@RestController
 public class MemberController {
     private final MemberService memberService;
 
