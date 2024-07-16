@@ -1,6 +1,6 @@
 
 make-docker:
-	docker build . -t sehyunsix/autotrading:0.1.0
+	docker build . --platform=linux/amd64 -t sehyunsix/autotrading:0.1.0
 	docker push sehyunsix/autotrading:0.1.0
 
 run-docker:

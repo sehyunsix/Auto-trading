@@ -10,7 +10,6 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
       MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
     volumes:
-      - mongo-trading:/data/db
       - ./data:/data
     ports:
       - '27017:27017'
@@ -34,8 +33,35 @@ services:
       - '8080:8080'
     depends_on:
       - mongo
+      - timescale
     environment:
       MONGO_URI: mongodb://admin:password123@mongo-trading:27017/test?authSource=admin
+      TIMESCALE_URL: postgres://root:password@timescale:5433/postgres
+
+  timescale:
+    image: timescale/timescaledb:latest-pg16
+    container_name: timescale
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: root
+    user: root
+    privileged: true
+    volumes:
+      - type: bind
+        source: ./timescaledb
+        target: /timescaledb
+      - './timescaledb/init:/docker-entrypoint-initdb.d/'
+
+    ports:
+      - 5433:5433
+
+  admin:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8082
+    depends_on:
+      - timescale
 
 volumes:
   mongo-trading:
