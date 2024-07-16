@@ -51,6 +51,7 @@ services:
         source: ./timescaledb
         target: /timescaledb
       - './timescaledb/init:/docker-entrypoint-initdb.d/'
+      - timescaledb:/var/lib/postgresql/data
 
     ports:
       - 5433:5433
@@ -65,3 +66,5 @@ services:
 
 volumes:
   mongo-trading:
+  timescaledb:
+    external: true
