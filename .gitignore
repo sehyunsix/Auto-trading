@@ -40,3 +40,4 @@ out/
 
 ##DATA
 **/*.csv
+**/*env.py
