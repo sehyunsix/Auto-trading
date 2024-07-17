@@ -1,7 +1,8 @@
 import psycopg2
+from env import DATA_BASE_URL
 
 ##example get open price
-CONNECTION = "postgres://sehyun:1234@ec2-3-25-126-189.ap-southeast-2.compute.amazonaws.com:5432/root"
+CONNECTION = DATA_BASE_URL
 with psycopg2.connect(CONNECTION) as conn:
     with conn.cursor() as cur:
         cur.execute(
