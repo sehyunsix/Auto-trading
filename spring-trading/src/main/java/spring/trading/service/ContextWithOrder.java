@@ -4,7 +4,7 @@ package spring.trading.service;
 import com.binance.connector.client.enums.DefaultUrls;
 import com.binance.connector.client.impl.WebSocketApiClientImpl;
 import com.binance.connector.client.utils.signaturegenerator.HmacSignatureGenerator;
-import com.binance.connector.client.utils.websocketcallback.WebSocketMessageCallback;
+import com.binance.connector.client.utils.websocketcallback.*;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
@@ -29,6 +29,21 @@ public class ContextWithOrder {
     private final RequestRepository requestRepository;
     private HashMap<Long, WebSocketApiClientImpl> clientConnMap;
     private MessageArriveListner messageArriveListner;
+
+    private WebSocketOpenCallback webSocketOpenCallback= (response )-> {
+        System.out.println("open :" +response);
+    };
+    private WebSocketClosedCallback webSocketClosedCallback = (code, reason) -> {
+        System.out.println("closed :"+Integer.toString(code) + reason);
+    };
+    private WebSocketFailureCallback webSocketFailureCallback = (throwable, response) -> {
+        System.out.println("faile :"+ response);
+    };
+
+    private WebSocketClosingCallback webSocketClosingCallback = (code, reason) -> {
+        System.out.println("closing :"+Integer.toString(code) + reason);
+
+    };
 
     public ContextWithOrder(RequestRepository requestRepository) {
         requestMap = new HashMap<>();
@@ -68,6 +83,11 @@ public class ContextWithOrder {
         }
 
     }
+
+    private WebSocketMessageCallback webSocketMessageCallback = (response) -> {
+        saveResponse(response);
+    };
+
     public WebSocketApiClientImpl connect(Member member) throws InterruptedException {
         String privateKey = member.getSecretkey();
         String publickey = member.getPublickey();
@@ -76,10 +96,7 @@ public class ContextWithOrder {
 
         WebSocketApiClientImpl client = new WebSocketApiClientImpl(publickey, signatureGenerator, DefaultUrls.TESTNET_WS_API_URL);
         //call back function
-        client.connect((message) -> {
-            saveResponse(message);
-
-        });
+        client.connect( webSocketOpenCallback, webSocketMessageCallback,webSocketClosingCallback, webSocketClosedCallback ,webSocketFailureCallback);
         clientConnMap.put(member.getId(),client);
         System.out.println("put member id");
         return client;
