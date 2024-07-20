@@ -2,3 +2,7 @@
 BTCUSDC
 ETHUSDC
 crypto
+weights
+data
+__pycache__
+websocket.log
