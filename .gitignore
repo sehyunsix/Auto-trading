@@ -7,3 +7,4 @@ data
 __pycache__
 websocket.log
 action_maker/test
+action_maker/socket_test.py
