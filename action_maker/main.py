@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routes.route import router
-from socket_test import start_socket
+# from socket_test import start_socket
 import _thread
 
 app = FastAPI()
