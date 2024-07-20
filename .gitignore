@@ -6,3 +6,4 @@ weights
 data
 __pycache__
 websocket.log
+action_maker/test
