@@ -6,7 +6,7 @@ from typing import List
 import base64
 from models.inference import predict_btc_prices_from_api
 from models.inference import simulation
-from socket_test import received_data
+# from socket_test import received_data
 from fastapi import WebSocket, WebSocketDisconnect
 import websockets
 from datetime import datetime, timedelta
