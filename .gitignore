@@ -41,3 +41,7 @@ out/
 ##DATA
 **/*.csv
 **/*env.py
+**/*.pkl
+**/__pycache__/
+**/*.h5
+**/wandb/

@@ -5,7 +5,7 @@ from sklearn.preprocessing import StandardScaler, MinMaxScaler
 
 class LSTMInferencer:
     def __init__(self, model):
-        self.model = modelz
+        self.model = model
         self.scaler = MinMaxScaler()
 
 
