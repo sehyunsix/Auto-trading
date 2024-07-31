@@ -45,3 +45,4 @@ out/
 **/__pycache__/
 **/*.h5
 **/wandb/
+**/*.log
