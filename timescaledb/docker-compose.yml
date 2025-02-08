@@ -1,0 +1,31 @@
+version: '3.3'
+services:
+  timescale:
+    image: timescale/timescaledb:latest-pg16
+    container_name: timescale
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: root
+    user: root
+    privileged: true
+    volumes:
+      - type: bind
+        source: ./data
+        target: /data
+      - './init:/docker-entrypoint-initdb.d/'
+      - timescaledb:/var/lib/postgresql/data
+
+    ports:
+      - 5432:5432
+
+  admin:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8080
+    depends_on:
+      - timescale
+
+volumes:
+  timescaledb:
+    external: true

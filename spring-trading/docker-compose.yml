@@ -1,0 +1,91 @@
+version: '3.3'
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo-trading
+    env_file:
+      - ./.env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    volumes:
+      - ./data:/data
+    ports:
+      - '27017:27017'
+  mongo-express:
+    image: mongo-express
+    restart: always
+    ports:
+      - 8081:8081
+    environment:
+      ME_CONFIG_MONGODB_ENABLE_ADMIN: 'true'
+      ME_CONFIG_MONGODB_URL: mongodb://admin:password123@mongo-trading:27017/test?authSource=admin
+      ME_CONFIG_MONGODB_AUTH_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      ME_CONFIG_MONGODB_AUTH_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+
+  trading:
+    image: sehyunsix/autotrading:0.1.0
+    container_name: trading
+    env_file:
+      - ./.env
+    ports:
+      - '8080:8080'
+    depends_on:
+      - mongo
+      - timescale
+    environment:
+      MONGO_URI: mongodb://admin:password123@mongo-trading:27017/test?authSource=admin
+      TIMESCALE_URL: postgres://root:password@timescale:5433/postgres
+
+  timescale:
+    image: timescale/timescaledb:latest-pg16
+    container_name: timescale
+    environment:
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: root
+    user: root
+    privileged: true
+    volumes:
+      - type: bind
+        source: ./timescaledb
+        target: /timescaledb
+      - './timescaledb/init:/docker-entrypoint-initdb.d/'
+      - timescaledb:/var/lib/postgresql/data
+
+    ports:
+      - 5433:5433
+
+  admin:
+    image: adminer
+    restart: always
+    ports:
+      - 8082:8082
+    depends_on:
+      - timescale
+
+  nginx:
+    image: nginx
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./etc/letsencrypt:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      - mongo
+      - mongo-express
+      - trading
+  certbot:
+    image: certbot/certbot
+    volumes:
+      - ./etc/letsencrypt:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+volumes:
+  mongo-trading:
+  timescaledb:
+    external: true
